@@ -33,15 +33,15 @@
       "url": "_framework\/icudt_no_CJK.dat"
     },
     {
-      "hash": "sha256-w1McFU8408moOJY44BA3YipT7NYRxk2c1RQTieSiqzo=",
+      "hash": "sha256-W7pUlZBYNnT2vKN3JKhiHLZ06PNwOu+yEmUhTReEjF0=",
       "url": "_framework\/blazor.boot.json"
     },
     {
-      "hash": "sha256-YWrXVY0yXNcHIY6r8VGG+eB9+N8aW4oebgi6xOKPfqU=",
+      "hash": "sha256-AYlXdQ74JmMnwz01TXfq8ljAbuLg0Yjkt67AeEbFquw=",
       "url": "_framework\/blazorwasmpoker.wasm"
     },
     {
-      "hash": "sha256-hDgVU8dskq6ceJCAHgkHTu9K3i4UmrP6AkqkdHaRRQo=",
+      "hash": "sha256-BmQxFwHCfZZHA9EPxpqy7hmvSMitN0CaEQQOUsdK78g=",
       "url": "_framework\/Microsoft.AspNetCore.Components.wasm"
     },
     {
@@ -65,7 +65,7 @@
       "url": "_framework\/Microsoft.Extensions.Configuration.wasm"
     },
     {
-      "hash": "sha256-Q6Yhy+74Ao+9QtddrcQ0vjhvbm2rxNl7JVAtSduGoh0=",
+      "hash": "sha256-XXDdzk5iP89M90E8kf4RutKcV4ytDgws7N\/RGRce5Yg=",
       "url": "_framework\/Microsoft.Extensions.DependencyInjection.Abstractions.wasm"
     },
     {
@@ -101,7 +101,7 @@
       "url": "_framework\/System.Collections.Concurrent.wasm"
     },
     {
-      "hash": "sha256-8Gke4XsKvJDoYP\/ae1DbEoaYfJHSJUbEdSbkNrqHaSw=",
+      "hash": "sha256-R7qoE2PRcW\/OmJoLEUKUIMPaxzMV4l98gl+\/KAd\/mI0=",
       "url": "_framework\/System.Collections.wasm"
     },
     {
@@ -113,11 +113,11 @@
       "url": "_framework\/System.Console.wasm"
     },
     {
-      "hash": "sha256-PhWuJsnPolBvHLRVNAGqwS6T8LCPm8n6pPha87lQG04=",
+      "hash": "sha256-v5Bisz9Gv4u\/PWGqJE3bbuEKXQe+o+EjdqUC44ao\/oE=",
       "url": "_framework\/System.Diagnostics.DiagnosticSource.wasm"
     },
     {
-      "hash": "sha256-v39hSGx8CsUgAqL3NRWe3trI4NAE178m9StCanXndjY=",
+      "hash": "sha256-ydOkVPjgdtXL7UMzlgF7j\/bGqkgVZzDPKbQwSlyPSck=",
       "url": "_framework\/System.Linq.wasm"
     },
     {
@@ -137,7 +137,7 @@
       "url": "_framework\/System.Net.Primitives.wasm"
     },
     {
-      "hash": "sha256-GltElOvTXyKmoEE6bvfwb8nUEwkhkmyfcYXHYLWowrg=",
+      "hash": "sha256-HPS\/f7k3i2vRihwUqDWzgw7GvT8tyclevNSFo+HiqBA=",
       "url": "_framework\/System.Private.CoreLib.wasm"
     },
     {
@@ -149,7 +149,7 @@
       "url": "_framework\/System.Runtime.InteropServices.JavaScript.wasm"
     },
     {
-      "hash": "sha256-kWof+ZlWkw\/k8kHOgxpQR0CiwYMjo+kWAew8NHywQq8=",
+      "hash": "sha256-wnoCFfnYG7tgJXosQ3PLEUXS8ZWrdlwjv+vSUP\/+evk=",
       "url": "_framework\/System.Runtime.wasm"
     },
     {
@@ -157,7 +157,7 @@
       "url": "_framework\/System.Text.Encodings.Web.wasm"
     },
     {
-      "hash": "sha256-yFpd40kxP4a+bknxLmZWmpA4LMA6DykjaWwdnz3di+0=",
+      "hash": "sha256-MUd6VdE5jh0N5uCavay9c6axOvxWEJxt1bS7HW0juJ0=",
       "url": "_framework\/System.Text.Json.wasm"
     },
     {
@@ -165,9 +165,49 @@
       "url": "_framework\/System.Text.RegularExpressions.wasm"
     },
     {
+      "hash": "sha256-xeQFqNNcgHBaBK767JCxyRvCQt+lQrzcDPuAycposjQ=",
+      "url": "_framework\/System.Threading.wasm"
+    },
+    {
       "hash": "sha256-UunuqEUyZZDJnf72ZVbE0J1usrhaIzckUgBzYUXJufs=",
       "url": "blazorwasmpoker.styles.css"
+    },
+    {
+      "hash": "sha256-JOZWd9XYwDyrwjSB0PVTcc602GisYED21qQUCSMlGtI=",
+      "url": "css\/app.css"
+    },
+    {
+      "hash": "sha256-z8OR40MowJ8GgK6P89Y+hiJK5+cclzFHzLhFQLL92bg=",
+      "url": "css\/bootstrap\/bootstrap.min.css"
+    },
+    {
+      "hash": "sha256-gBwg2tmA0Ci2u54gMF1jNCVku6vznarkLS6D76htNNQ=",
+      "url": "css\/bootstrap\/bootstrap.min.css.map"
+    },
+    {
+      "hash": "sha256-4mWsDy3aHl36ZbGt8zByK7Pvd4kRUoNgTYzRnwmPHwg=",
+      "url": "favicon.png"
+    },
+    {
+      "hash": "sha256-DbpQaq68ZSb5IoPosBErM1QWBfsbTxpJqhU0REi6wP4=",
+      "url": "icon-192.png"
+    },
+    {
+      "hash": "sha256-oEo6d+KqX5fjxTiZk\/w9NB3Mi0+ycS5yLwCKwr4IkbA=",
+      "url": "icon-512.png"
+    },
+    {
+      "hash": "sha256-ldtOUYT28iYV1iaEWv6gn9rNLQRwpRdJU7FaulhD6JM=",
+      "url": "index.html"
+    },
+    {
+      "hash": "sha256-5708NN6Dhr4jTGk2abDO5JwGL9ks7AEitZC1P6Rpfc8=",
+      "url": "manifest.webmanifest"
+    },
+    {
+      "hash": "sha256-enKgCMkYmCpfEcmg6Annbmc40VZ\/A6aYYSQjZfVn2cU=",
+      "url": "sample-data\/weather.json"
     }
   ],
-  "version": "06XUitf6"
+  "version": "RQ+aXFNt"
 };
