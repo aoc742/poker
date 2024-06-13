@@ -1,18 +1,288 @@
-﻿@page "/poker"
+﻿@page "/"
 
 <PageTitle>Poker</PageTitle>
 
 <h1>Poker</h1>
+<h2>Score: @score</h2>
+<h2>Score change: @scoreChange</h2>
 
-<div id="hand border" style="height:100%; width:100%; overflow: hidden;">
-    <div id="card1" style="float: left; width:20%; background-color:lightblue;">Card 1</div>
-    <div id="card2" style="float: left; width:20%; background-color:lightgrey;">Card 2</div>
-    <div id="card3" style="float: left; width:20%; background-color:lightblue;">Card 3</div>
-    <div id="card4" style="float: left; width:20%; background-color:lightgrey;">Card 4</div>
-    <div id="card5" style="float: left; width:20%; background-color:lightblue;">Card 5</div>
+<div id="hand" style="height:100%; width:100%; min-height:100px; overflow: hidden; font-size: 100%;">
+    <div id="card1" style="float: left; width:20%; height:100px; background-color:lightblue; font-size: 5vw;">
+        @{
+            if (card1.GetId() <= 26)
+            {
+                <label style="color: black; float: center">@card1.GetName()</label>
+            }
+            else
+            {
+                <label style="color: red; float: center">@card1.GetName()</label>
+            }
+        }
+    </div>
+    <div id="card2" style="float: left; width:20%; height:100px; background-color:lightgrey; font-size: 5vw;">
+        @{
+            if (card2.GetId() <= 26)
+            {
+                <label style="color: black">@card2.GetName()</label>
+            }
+            else
+            {
+                <label style="color: red">@card2.GetName()</label>
+            }
+        }
+    </div>
+    <div id="card3" style="float: left; width:20%; height:100px; background-color:lightblue; font-size: 5vw;">
+        @{
+            if (card3.GetId() <= 26)
+            {
+                <label style="color: black">@card3.GetName()</label>
+            }
+            else
+            {
+                <label style="color: red">@card3.GetName()</label>
+            }
+        }
+    </div>
+    <div id="card4" style="float: left; width:20%; height:100px; background-color:lightgrey; font-size: 5vw;">
+        @{
+            if (card4.GetId() <= 26)
+            {
+                <label style="color: black">@card4.GetName()</label>
+            }
+            else
+            {
+                <label style="color: red">@card4.GetName()</label>
+            }
+        }
+    </div>
+    <div id="card5" style="float: left; width:20%; height:100px; background-color:lightblue; font-size: 5vw;">
+        @{
+            if (card5.GetId() <= 26)
+            {
+                <label style="color: black">@card5.GetName()</label>
+            }
+            else
+            {
+                <label style="color: red">@card5.GetName()</label>
+            }
+        }
+    </div>
+</div>
+
+<div id="hold text" style="height:25px; width:100%; overflow: hidden;">
+    <div style="float: left; width: 20%">
+        @{
+            if (holdCard1)
+            {
+                <label>Hold</label>
+            }
+            else
+            {
+                <label> </label>
+            }
+        }
+    </div>
+    <div style="float: left; width: 20%">
+        @{
+            if (holdCard2)
+            {
+                <label>Hold</label>
+            }
+            else
+            {
+                <label> </label>
+            }
+        }
+    </div>
+    <div style="float: left; width: 20%">
+        @{
+            if (holdCard3)
+            {
+                <label>Hold</label>
+            }
+            else
+            {
+                <label> </label>
+            }
+        }
+    </div>
+    <div style="float: left; width: 20%">
+        @{
+            if (holdCard4)
+            {
+                <label>Hold</label>
+            }
+            else
+            {
+                <label> </label>
+            }
+        }
+    </div>
+    <div style="float: left; width: 20%">
+        @{
+            if (holdCard5)
+            {
+                <label>Hold</label>
+            }
+            else
+            {
+                <label> </label>
+            }
+        }
+    </div>
+</div>
+
+<div id="hold buttons" style="height:100%; width:100%; overflow: hidden;">
+    <button disabled="@toggleDealDraw" style="float: left; width:20%" class="btn btn-primary" @onclick="HoldCard1BtnClicked">Hold</button>
+    <button disabled="@toggleDealDraw" style="float: left; width:20%" class="btn btn-primary" @onclick="HoldCard2BtnClicked">Hold</button>
+    <button disabled="@toggleDealDraw" style="float: left; width:20%" class="btn btn-primary" @onclick="HoldCard3BtnClicked">Hold</button>
+    <button disabled="@toggleDealDraw" style="float: left; width:20%" class="btn btn-primary" @onclick="HoldCard4BtnClicked">Hold</button>
+    <button disabled="@toggleDealDraw" style="float: left; width:20%" class="btn btn-primary" @onclick="HoldCard5BtnClicked">Hold</button>
+</div>
+
+<div id="DealDraw button" style="text-align: center">
+    <!--TODO figure out how to reserve boolean logic in blazor easily for these hidden attributes-->
+    <button hidden="@started" class="btn btn-primary" @onclick="Start">Start</button>
+    <button hidden="@notStarted" class="btn btn-primary" @onclick="OnDealDrawBtnClicked">@dealDrawBtn</button>
+    <h3>@winLoss</h3>
+    <h2>@gameOver</h2>
 </div>
 
 
 @code {
+    // Game logic
+    private GameModel gameModel = new GameModel();
 
+    private bool started = false;
+    private bool notStarted = true;
+
+    // Game Over text displayed when score reaches 0
+    private string gameOver = string.Empty;
+
+    // Current score
+    private int score;
+
+    // Represents how much the score changes after each round
+    private string scoreChange = string.Empty;
+
+    // Text displayed after each round indicated win or loss
+    private string winLoss = string.Empty;
+
+    // Text displayed on Deal/Draw toggle button
+    private string dealDrawBtn = "Deal new round";
+
+    // Boolean representing if a dealt card should be held during the draw
+    private bool holdCard1 = false;
+    private bool holdCard2 = false;
+    private bool holdCard3 = false;
+    private bool holdCard4 = false;
+    private bool holdCard5 = false;
+
+    PlayingCardModel card1 = new PlayingCardModel(1);
+    PlayingCardModel card2 = new PlayingCardModel(2);
+    PlayingCardModel card3 = new PlayingCardModel(3);
+    PlayingCardModel card4 = new PlayingCardModel(4);
+    PlayingCardModel card5 = new PlayingCardModel(5);
+
+    private void Start()
+    {
+        // unsubscibe first to avoid duplicate event handlers
+        gameModel.CardsUpdated -= _gameModel_CardsUpdated;
+        gameModel.ScoreUpdated -= _gameModel_ScoreUpdated;
+        gameModel.ResultsObtained -= _gameModel_WinObtained;
+        gameModel.GameOverTriggered -= _gameModel_GameOverTriggered;
+
+        // subscribe event handlers
+        gameModel.CardsUpdated += _gameModel_CardsUpdated;
+        gameModel.ScoreUpdated += _gameModel_ScoreUpdated;
+        gameModel.ResultsObtained += _gameModel_WinObtained;
+        gameModel.GameOverTriggered += _gameModel_GameOverTriggered;
+
+        gameModel.Start();
+        started = true;
+        notStarted = false;
+    }
+
+    private void _gameModel_ScoreUpdated(object sender, ScoreUpdatedEventArgs e)
+    {
+        this.score = e.Score;
+        if (e.ScoreChange > 0)
+        {
+            scoreChange = $" (+{e.ScoreChange})";
+        }
+    }
+
+    private void _gameModel_GameOverTriggered(object? sender, EventArgs e)
+    {
+        gameOver = "Game Over";
+        dealDrawBtn = "Start New Game";
+    }
+
+    private void _gameModel_WinObtained(object sender, ResultsObtainedEventArgs e)
+    {
+        winLoss = e.WinLoss ? "Win: " + e.WinCondition.ToString() : "Loss";
+    }
+
+    private void _gameModel_CardsUpdated(object sender, CardsUpdatedEventArgs e)
+    {
+        card1 = e.NewCards.ToList()[0];
+        card2 = e.NewCards.ToList()[1];
+        card3 = e.NewCards.ToList()[2];
+        card4 = e.NewCards.ToList()[3];
+        card5 = e.NewCards.ToList()[4];
+    }
+
+    private void HoldCard1BtnClicked()
+    {
+        holdCard1 = !holdCard1;
+    }
+
+    private void HoldCard2BtnClicked()
+    {
+        holdCard2 = !holdCard2;
+    }
+
+    private void HoldCard3BtnClicked()
+    {
+        holdCard3 = !holdCard3;
+    }
+
+    private void HoldCard4BtnClicked()
+    {
+        holdCard4 = !holdCard4;
+    }
+
+    private void HoldCard5BtnClicked()
+    {
+        holdCard5 = !holdCard5;
+    }
+
+    private bool toggleDealDraw = true;
+    private void OnDealDrawBtnClicked()
+    {
+        gameOver = string.Empty;
+
+        if (toggleDealDraw)
+        {
+            gameModel.Deal();
+            dealDrawBtn = "Draw";
+            winLoss = "";
+            scoreChange = "";
+        }
+        else
+        {
+            List<int> cardsToDiscard = new List<int>();
+            if (!holdCard1) cardsToDiscard.Add(0);
+            if (!holdCard2) cardsToDiscard.Add(1);
+            if (!holdCard3) cardsToDiscard.Add(2);
+            if (!holdCard4) cardsToDiscard.Add(3);
+            if (!holdCard5) cardsToDiscard.Add(4);
+            gameModel.Draw(cardsToDiscard);
+            dealDrawBtn = "Deal new round";
+            holdCard1 = holdCard2 = holdCard3 = holdCard4 = holdCard5 = false;
+        }
+        toggleDealDraw = !toggleDealDraw;
+
+        // TODO toggle Hold buttons being clickable
+    }
 }

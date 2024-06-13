@@ -8,16 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="root\css\app.css" />
-    <Content Include="root\css\bootstrap\bootstrap.min.css" />
-    <Content Include="root\css\bootstrap\bootstrap.min.css.map" />
-    <Content Include="root\favicon.png" />
-    <Content Include="root\icon-192.png" />
-    <Content Include="root\icon-512.png" />
-    <Content Include="root\index.html" />
-    <Content Include="root\manifest.webmanifest" />
-    <Content Include="root\service-worker.js" />
-    <Content Include="root\service-worker.published.js" />
+    <None Include="wwwroot\css\app.css" />
+    <None Include="wwwroot\css\bootstrap\bootstrap.min.css" />
+    <None Include="wwwroot\css\bootstrap\bootstrap.min.css.map" />
+    <None Include="wwwroot\favicon.png" />
+    <None Include="wwwroot\icon-192.png" />
+    <None Include="wwwroot\icon-512.png" />
+    <None Include="wwwroot\index.html" />
+    <None Include="wwwroot\manifest.webmanifest" />
+    <None Include="wwwroot\service-worker.js" />
+    <None Include="wwwroot\service-worker.published.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ServiceWorker Include="root\service-worker.js" PublishedContent="root\service-worker.published.js" />
+    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
 
 </Project>
