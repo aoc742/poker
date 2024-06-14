@@ -153,6 +153,8 @@
     <h2>@gameOver</h2>
 </div>
 
+<label style="position:absolute;bottom:0px;right:0px; font-size: 8;">Seed: @seed</label>
+
 
 @code {
     // Game logic
@@ -183,6 +185,8 @@
     private bool holdCard4 = false;
     private bool holdCard5 = false;
 
+    private int seed;
+
     PlayingCardModel card1 = new PlayingCardModel(1);
     PlayingCardModel card2 = new PlayingCardModel(2);
     PlayingCardModel card3 = new PlayingCardModel(3);
@@ -204,6 +208,7 @@
         gameModel.GameOverTriggered += _gameModel_GameOverTriggered;
 
         gameModel.Start();
+        seed = gameModel.GetSeed();
         started = true;
         notStarted = false;
     }

@@ -20,7 +20,8 @@
         private List<PlayingCardModel> _hand = new List<PlayingCardModel>(new PlayingCardModel[5]); // 5 card hand
         private int _score = 0;
 
-        private Random rng = new Random();
+        private int seed = new Random().Next();
+        private Random rng;
 
         public event CardsUpdatedEventHandler? CardsUpdated;
         public event ScoreUpdatedEventHandler? ScoreUpdated;
@@ -34,6 +35,8 @@
             {
                 this._deck.Add(new PlayingCardModel(i));
             }
+
+            rng = new Random(seed);
         }
 
         // Id numbers of the 5 cards in hand
@@ -259,6 +262,11 @@
             this._score = 100; // Upon game over, add 100 points to the total to start over
             ScoreUpdated?.Invoke(this, new ScoreUpdatedEventArgs() { Score = _score, ScoreChange = 0 });
 
+        }
+
+        public int GetSeed()
+        {
+            return seed;
         }
     }
 }
