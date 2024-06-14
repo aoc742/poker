@@ -11,11 +11,11 @@ void TestStraight()
 {
     var hand = new List<PlayingCardModel>()
     {
-        new PlayingCardModel(52),
-        new PlayingCardModel(50),
-        new PlayingCardModel(36),
-        new PlayingCardModel(25),
-        new PlayingCardModel(27)
+        new PlayingCardModel(44),
+        new PlayingCardModel(33),
+        new PlayingCardModel(19),
+        new PlayingCardModel(47),
+        new PlayingCardModel(9)
     };
 
     gameModel._hand = hand;
