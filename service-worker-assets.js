@@ -33,11 +33,11 @@
       "url": "_framework\/icudt_no_CJK.dat"
     },
     {
-      "hash": "sha256-W7pUlZBYNnT2vKN3JKhiHLZ06PNwOu+yEmUhTReEjF0=",
+      "hash": "sha256-hKYaPXfQFJPGT\/pGe\/HvUOK5kEXaj3pNwtRHY\/4dagY=",
       "url": "_framework\/blazor.boot.json"
     },
     {
-      "hash": "sha256-AYlXdQ74JmMnwz01TXfq8ljAbuLg0Yjkt67AeEbFquw=",
+      "hash": "sha256-r6SSM8FGeUhM7h9iik\/Q1EEMiH7Hdsb8SEK29vqXqiI=",
       "url": "_framework\/blazorwasmpoker.wasm"
     },
     {
@@ -185,15 +185,15 @@
       "url": "css\/bootstrap\/bootstrap.min.css.map"
     },
     {
-      "hash": "sha256-4mWsDy3aHl36ZbGt8zByK7Pvd4kRUoNgTYzRnwmPHwg=",
+      "hash": "sha256-6PK7kE9Yb8f+jKvQs9WrwXwavBXB6oK+1OWBFhSqB3A=",
       "url": "favicon.png"
     },
     {
-      "hash": "sha256-DbpQaq68ZSb5IoPosBErM1QWBfsbTxpJqhU0REi6wP4=",
+      "hash": "sha256-I7p+RW8ARl7YtSXGqOt4mJWy2S+CZ+By24dhpwI28KM=",
       "url": "icon-192.png"
     },
     {
-      "hash": "sha256-oEo6d+KqX5fjxTiZk\/w9NB3Mi0+ycS5yLwCKwr4IkbA=",
+      "hash": "sha256-iFEJQNweC8lRJM9XyFdeVlH1PflIizgjT5aLMsIdjcA=",
       "url": "icon-512.png"
     },
     {
@@ -209,5 +209,5 @@
       "url": "sample-data\/weather.json"
     }
   ],
-  "version": "RQ+aXFNt"
+  "version": "V\/Vs8+Xl"
 };
