@@ -5,8 +5,10 @@
 <h1>Poker</h1>
 
 <div style="height:25px; width:100%;">
-    <h2 style="float: left; width:50%;">Score: @score <label style="color: green">@scoreChange</label></h2>
-    <h3 style="float: left; width:50%; text-align: center;">@winLoss</h3>
+    <h2 style="float: left; width:100%;">Score: @score <label style="color: green">@scoreChange</label></h2>
+</div>
+<div style="height: 25px; width: 100%;">
+    <h2 style="float: left;">@winLoss</h2>
 </div>
 
 
@@ -169,7 +171,7 @@
     private string scoreChange = string.Empty;
 
     // Text displayed after each round indicated win or loss
-    private string winLoss = string.Empty;
+    private string winLoss = "😐";
 
     // Text displayed on Deal/Draw toggle button
     private string dealDrawBtn = "Deal new round";
@@ -223,7 +225,7 @@
 
     private void _gameModel_WinObtained(object sender, ResultsObtainedEventArgs e)
     {
-        winLoss = e.WinLoss ? "Win: " + e.WinCondition.ToString() : "Loss";
+        winLoss = e.WinLoss ? "😊Win: " + e.WinCondition.ToString() : "😢Loss";
     }
 
     private void _gameModel_CardsUpdated(object sender, CardsUpdatedEventArgs e)
@@ -269,7 +271,7 @@
         {
             gameModel.Deal();
             dealDrawBtn = "Draw";
-            winLoss = "";
+            winLoss = "😐";
             scoreChange = "";
         }
         else
