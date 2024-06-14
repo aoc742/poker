@@ -23,7 +23,7 @@ void TestStraight()
 
     WinCondition result = gameModel.calculateScore();
 
-    Console.WriteLine($"Result: {result}");
+    Console.WriteLine($"Straight Result: {result}");
 }
 TestStraight();
 
@@ -32,11 +32,11 @@ void TestFlush()
 {
     var hand = new List<PlayingCardModel>()
     {
-        new PlayingCardModel(52),
-        new PlayingCardModel(50),
-        new PlayingCardModel(36),
-        new PlayingCardModel(25),
-        new PlayingCardModel(27)
+        new PlayingCardModel(44),
+        new PlayingCardModel(13),
+        new PlayingCardModel(47),
+        new PlayingCardModel(45),
+        new PlayingCardModel(43)
     };
 
     gameModel._hand = hand;
@@ -44,7 +44,7 @@ void TestFlush()
 
     WinCondition result = gameModel.calculateScore();
 
-    Console.WriteLine($"Result: {result}");
+    Console.WriteLine($"Flush Result: {result}");
 }
 TestFlush();
 

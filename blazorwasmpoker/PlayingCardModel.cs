@@ -102,7 +102,7 @@
             this._name = CardNames[cardId];
 
             // Determine card suit
-            if (_id < 13)
+            if (_id <= 13)
             {
                 this._suit = CardSuit.Clubs;
             }
