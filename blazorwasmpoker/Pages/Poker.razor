@@ -148,8 +148,8 @@
 
 <div id="DealDraw button" style="text-align: center; margin: 25px;">
     <!--TODO figure out how to reserve boolean logic in blazor easily for these hidden attributes-->
-    <button hidden="@started" class="btn btn-primary"    style="min-height: 50px; min-width: 100px" @onclick="Start">Start</button>
-    <button hidden="@notStarted" class="btn btn-primary" style="min-height: 50px; min-width: 100px" @onclick="OnDealDrawBtnClicked">@dealDrawBtn</button>
+    <button hidden="@started" class="btn btn-primary"    style="touch-action: manipulation; min-height: 50px; min-width: 100px" @onclick="Start">Start</button>
+    <button hidden="@notStarted" class="btn btn-primary" style="touch-action: manipulation; min-height: 50px; min-width: 100px" @onclick="OnDealDrawBtnClicked">@dealDrawBtn</button>
     <h2>@gameOver</h2>
 </div>
 
