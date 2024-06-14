@@ -14,10 +14,10 @@
         RoyalFlush = 5000
     }
 
-    class GameModel : IGameplay
+    public class GameModel : IGameplay
     {
         private List<PlayingCardModel> _deck = new List<PlayingCardModel>(); // 52 card deck
-        private List<PlayingCardModel> _hand = new List<PlayingCardModel>(new PlayingCardModel[5]); // 5 card hand
+        public List<PlayingCardModel> _hand = new List<PlayingCardModel>(new PlayingCardModel[5]); // 5 card hand
         private int _score = 0;
 
         private int seed = new Random().Next();
@@ -107,8 +107,8 @@
             if (_hand.DistinctBy(card => card.GetCardNumber()).Count() < 5) return false;
 
             var sortedHand = _hand.OrderBy(card => card.GetCardNumber()).ToList();
-            int maxNumber = (int)sortedHand[0].GetCardNumber();
-            int minNumber = (int)sortedHand[4].GetCardNumber();
+            int minNumber = (int)sortedHand[0].GetCardNumber();
+            int maxNumber = (int)sortedHand[4].GetCardNumber();
 
             // Ace is set to low value here
             if (maxNumber - minNumber == 4) return true;
@@ -161,7 +161,7 @@
             return false;
         }
 
-        private WinCondition calculateScore()
+        public WinCondition calculateScore()
         {
             if (isRoyalFlush()) return WinCondition.RoyalFlush;
             if (isStraightFlush()) return WinCondition.StraightFlush;
