@@ -21,6 +21,11 @@
         public int ScoreChange { get; set; }
     }
 
+    public class  HighScoreUpdatedEventArgs : EventArgs
+    {
+        public int HighScore { get; set; }
+    }
+
     public class GameStateChangedEventArgs : EventArgs
     {
         public GameState GameState { get; set; }
@@ -30,6 +35,7 @@
     public delegate void ScoreUpdatedEventHandler(Object sender, ScoreUpdatedEventArgs e);
     public delegate void ResultsObtainedEventHandler(Object sender, ResultsObtainedEventArgs e);
     public delegate void GameStateChangedEventHandler(Object sender, GameStateChangedEventArgs e);
+    public delegate void HighScoreUpdatedEventHandler(Object sender, HighScoreUpdatedEventArgs e);
 
     public interface IGameplay
     {
@@ -37,6 +43,7 @@
         public event ScoreUpdatedEventHandler ScoreUpdated;
         public event ResultsObtainedEventHandler ResultsObtained;
         public event GameStateChangedEventHandler GameStateChanged;
+        public event HighScoreUpdatedEventHandler HighScoreUpdated;
         public event EventHandler GameOverTriggered;
 
         void Start();

@@ -5,6 +5,9 @@
 <h1>Poker</h1>
 
 <div style="height:25px; width:100%;">
+    <h2 style="float: left; width:100%;">High Score: @highScore </h2>
+</div>
+<div style="height:25px; width:100%;">
     <h2 style="float: left; width:100%;">Score: @score <label style="color: green">@scoreChange</label></h2>
 </div>
 <div style="height: 25px; width: 100%;">
@@ -163,11 +166,15 @@
     private bool started = false;
     private bool notStarted = true;
 
+    private GameState gameState = GameState.NewGame;
+
     // Game Over text displayed when score reaches 0
     private string gameOver = string.Empty;
 
     // Current score
     private int score;
+
+    private int highScore;
 
     // Represents how much the score changes after each round
     private string scoreChange = string.Empty;
@@ -201,12 +208,16 @@
         gameModel.ScoreUpdated -= _gameModel_ScoreUpdated;
         gameModel.ResultsObtained -= _gameModel_WinObtained;
         gameModel.GameOverTriggered -= _gameModel_GameOverTriggered;
+        gameModel.HighScoreUpdated -= _gameModel_HighScoreUpdated;
+        gameModel.GameStateChanged -= _gameModel_GameStateChanged;
 
         // subscribe event handlers
         gameModel.CardsUpdated += _gameModel_CardsUpdated;
         gameModel.ScoreUpdated += _gameModel_ScoreUpdated;
         gameModel.ResultsObtained += _gameModel_WinObtained;
         gameModel.GameOverTriggered += _gameModel_GameOverTriggered;
+        gameModel.HighScoreUpdated += _gameModel_HighScoreUpdated;
+        gameModel.GameStateChanged += _gameModel_GameStateChanged;
 
         gameModel.Initialize();
     }
@@ -217,6 +228,16 @@
         seed = gameModel.GetSeed();
         started = true;
         notStarted = false;
+    }
+
+    private void _gameModel_HighScoreUpdated(object sender, HighScoreUpdatedEventArgs e)
+    {
+        highScore = e.HighScore;
+    }
+
+    private void _gameModel_GameStateChanged(object sender, GameStateChangedEventArgs e)
+    {
+        gameState = e.GameState;
     }
 
     private void _gameModel_ScoreUpdated(object sender, ScoreUpdatedEventArgs e)

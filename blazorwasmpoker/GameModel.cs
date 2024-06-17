@@ -35,6 +35,7 @@
 
         public event CardsUpdatedEventHandler? CardsUpdated;
         public event ScoreUpdatedEventHandler? ScoreUpdated;
+        public event HighScoreUpdatedEventHandler? HighScoreUpdated;
         public event ResultsObtainedEventHandler? ResultsObtained;
         public event GameStateChangedEventHandler? GameStateChanged;
         public event EventHandler? GameOverTriggered;
@@ -303,6 +304,12 @@
             WinCondition winCondition = calculateScore();
             int scoreChange = (int)winCondition;
             this._score += scoreChange;
+
+            if (_score > _highScore)
+            {
+                _highScore = _score;
+                HighScoreUpdated?.Invoke(this, new HighScoreUpdatedEventArgs() { HighScore = _highScore });
+            }
 
             ScoreUpdated?.Invoke(this, new ScoreUpdatedEventArgs() { Score = _score, ScoreChange = scoreChange });
 
