@@ -21,15 +21,22 @@
         public int ScoreChange { get; set; }
     }
 
+    public class GameStateChangedEventArgs : EventArgs
+    {
+        public GameState GameState { get; set; }
+    }
+
     public delegate void CardsUpdatedEventHandler(Object sender, CardsUpdatedEventArgs e);
     public delegate void ScoreUpdatedEventHandler(Object sender, ScoreUpdatedEventArgs e);
     public delegate void ResultsObtainedEventHandler(Object sender, ResultsObtainedEventArgs e);
+    public delegate void GameStateChangedEventHandler(Object sender, GameStateChangedEventArgs e);
 
     public interface IGameplay
     {
         public event CardsUpdatedEventHandler CardsUpdated;
         public event ScoreUpdatedEventHandler ScoreUpdated;
         public event ResultsObtainedEventHandler ResultsObtained;
+        public event GameStateChangedEventHandler GameStateChanged;
         public event EventHandler GameOverTriggered;
 
         void Start();

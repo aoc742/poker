@@ -1,0 +1,6 @@
+﻿{
+  "currentScore": 0,
+  "highScore": 0,
+  "initialSeed": 0,
+  "gameState":  0 // newGame, draw, deal, gameOver
+}

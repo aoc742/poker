@@ -193,7 +193,8 @@
     PlayingCardModel card4 = new PlayingCardModel(4);
     PlayingCardModel card5 = new PlayingCardModel(5);
 
-    private void Start()
+
+    protected override void OnInitialized()
     {
         // unsubscibe first to avoid duplicate event handlers
         gameModel.CardsUpdated -= _gameModel_CardsUpdated;
@@ -207,6 +208,11 @@
         gameModel.ResultsObtained += _gameModel_WinObtained;
         gameModel.GameOverTriggered += _gameModel_GameOverTriggered;
 
+        gameModel.Initialize();
+    }
+
+    private void Start()
+    {
         gameModel.Start();
         seed = gameModel.GetSeed();
         started = true;

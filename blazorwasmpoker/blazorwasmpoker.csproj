@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="history.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\css\app.css" />
     <None Include="wwwroot\css\bootstrap\bootstrap.min.css" />
     <None Include="wwwroot\css\bootstrap\bootstrap.min.css.map" />
@@ -28,5 +32,7 @@
   <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

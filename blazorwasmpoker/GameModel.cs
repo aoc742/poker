@@ -1,5 +1,13 @@
 ﻿namespace blazorwasmpoker
 {
+    public enum GameState
+    {
+        NewGame = 0,
+        Deal = 1,
+        Draw = 2,
+        GameOver = 3
+    }
+
     public enum WinCondition
     {
         Loss = 0,
@@ -19,13 +27,16 @@
         private List<PlayingCardModel> _deck = new List<PlayingCardModel>(); // 52 card deck
         public List<PlayingCardModel> _hand = new List<PlayingCardModel>(new PlayingCardModel[5]); // 5 card hand
         private int _score = 0;
-
-        private int seed = new Random().Next();
-        private Random rng;
+        private int _highScore = 0;
+        private GameState _gameState = GameState.NewGame;
+        private int seed = 0;
+        private Random rng = new Random();
+        AppHistory saveState = new AppHistory();
 
         public event CardsUpdatedEventHandler? CardsUpdated;
         public event ScoreUpdatedEventHandler? ScoreUpdated;
         public event ResultsObtainedEventHandler? ResultsObtained;
+        public event GameStateChangedEventHandler? GameStateChanged;
         public event EventHandler? GameOverTriggered;
 
         public GameModel()
@@ -35,20 +46,74 @@
             {
                 this._deck.Add(new PlayingCardModel(i));
             }
-
-            rng = new Random(seed);
         }
 
-        // Id numbers of the 5 cards in hand
-        private List<int> GetHandIds()
+        public void Initialize()
         {
-            return new List<int>(new int[5]);
+            // Attempt to retrieve history, otherwise starts a new game instance
+            saveState = HistorySerializer.Deserialize();
+
+            _score = saveState.CurrentScore;
+            _highScore = saveState.HighScore;
+            seed = saveState.Seed > 0 ? saveState.Seed : rng.Next(); // load seed if it exists, otherwise create new seed
+            _hand.Clear();
+            _hand.Add(new PlayingCardModel(saveState.Hand[0]));
+            _hand.Add(new PlayingCardModel(saveState.Hand[1]));
+            _hand.Add(new PlayingCardModel(saveState.Hand[2]));
+            _hand.Add(new PlayingCardModel(saveState.Hand[3]));
+            _hand.Add(new PlayingCardModel(saveState.Hand[4]));
+            //UpdateGameState(saveState.GameState);
         }
+
+        private void Save()
+        {
+            saveState.Hand = _hand.Select(card => card.GetId()).ToList();
+            saveState.Seed = seed;
+            saveState.CurrentScore = _score;
+            saveState.HighScore = _highScore;
+            saveState.GameState = _gameState;
+
+            HistorySerializer.Serialize(saveState);
+        }
+
+        //private void UpdateGameState(GameState currentGameState)
+        //{
+        //    switch (currentGameState)
+        //    {
+        //        // New Game
+        //        case GameState.NewGame:
+        //            // Reset hand and deck
+        //            // Reset seed
+        //            break;
+        //        // Deal
+        //        case GameState.Deal:
+        //            // Notify Hand cards update
+        //            // Fix deck to exclude hand
+        //            // set current seed
+        //            break;
+        //        // Draw
+        //        case GameState.Draw:
+        //            // Notify Hand cards update
+        //            // Fix deck to exclude hand
+        //            // set current seed
+        //            // Notify Score/Results updates
+        //            break;
+        //        // Game Over
+        //        case GameState.GameOver:
+        //            // Notify Hand cards update
+        //            // Fix deck to exclude hand
+        //            // set current seed
+        //            // Notify game over
+        //            break;
+        //        default:
+        //            throw new Exception($"Invalid game state {currentGameState}");
+        //    }
+
+        //    GameStateChanged?.Invoke(this, new GameStateChangedEventArgs() { GameState = currentGameState });
+        //}
 
         private bool isRoyalFlush()
         {
-            var handIds = GetHandIds();
-
             CardSuit currentSuit = _hand[0].GetSuit();
             if (_hand.All(card => card.GetSuit() == currentSuit) &&
                 _hand.Any(card => card.GetCardNumber() == CardNumber.Ten) &&
@@ -188,6 +253,7 @@
             }
         }
 
+
         public void Deal()
         {
             // Upon dealing new hand, automatically bet 5 points for the user
@@ -209,6 +275,8 @@
             {
                 NewCards = _hand
             });
+
+            Save();
         }
 
         public void Draw(IEnumerable<int> indicesOfCardsToDiscard)
@@ -226,6 +294,8 @@
             });
 
             EndOfTurn();
+            Save();
+
         }
 
         public void EndOfTurn()
@@ -256,11 +326,19 @@
 
         public void Start()
         {
-            // TODO check for saved state. If exists, load it
+            // Unshuffle cards
+            _deck.OrderBy(card => card.GetId()).ToList();
+            _hand[0] = _deck[0];
+            _hand[1] = _deck[1];
+            _hand[2] = _deck[2];
+            _hand[3] = _deck[3];
+            _hand[4] = _deck[4];
+            CardsUpdated?.Invoke(this, new CardsUpdatedEventArgs() { NewCards = _hand });
 
-            // Otherwise start a new game
-            this._score = 100; // Upon game over, add 100 points to the total to start over
+            // Reset score back to 100
+            this._score = 100;
             ScoreUpdated?.Invoke(this, new ScoreUpdatedEventArgs() { Score = _score, ScoreChange = 0 });
+            Save();
 
         }
 
