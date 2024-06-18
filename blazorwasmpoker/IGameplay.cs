@@ -26,8 +26,15 @@
         public int HighScore { get; set; }
     }
 
+    public class SeedUpdatedEventArgs : EventArgs
+    {
+        public int Seed { get; set; }
+    }
+
     public class GameStateChangedEventArgs : EventArgs
     {
+        // True when invoked the very first time the app is refreshed, otherwise false.
+        public bool FirstLoad { get; set; } = false;
         public GameState GameState { get; set; }
     }
 
@@ -36,6 +43,7 @@
     public delegate void ResultsObtainedEventHandler(Object sender, ResultsObtainedEventArgs e);
     public delegate void GameStateChangedEventHandler(Object sender, GameStateChangedEventArgs e);
     public delegate void HighScoreUpdatedEventHandler(Object sender, HighScoreUpdatedEventArgs e);
+    public delegate void SeedUpdatedEventHandler(Object sender, SeedUpdatedEventArgs e);
 
     public interface IGameplay
     {
@@ -44,6 +52,7 @@
         public event ResultsObtainedEventHandler ResultsObtained;
         public event GameStateChangedEventHandler GameStateChanged;
         public event HighScoreUpdatedEventHandler HighScoreUpdated;
+        public event SeedUpdatedEventHandler SeedUpdated;
         public event EventHandler GameOverTriggered;
 
         void Start();

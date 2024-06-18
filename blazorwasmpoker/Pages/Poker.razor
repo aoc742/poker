@@ -1,4 +1,6 @@
 ﻿@page "/"
+@inject HttpClient Http
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <PageTitle>Poker</PageTitle>
 
@@ -142,17 +144,18 @@
 </div>
 
 <div id="hold buttons" style="height:100%; width:100%; overflow: hidden;">
-    <button disabled="@toggleDealDraw" style="touch-action: manipulation; float: left; min-height: 50px; width:calc(20% - 10px); margin: 5px;" class="btn btn-primary" @onclick="HoldCard1BtnClicked">Hold</button>
-    <button disabled="@toggleDealDraw" style="touch-action: manipulation; float: left; min-height: 50px; width:calc(20% - 10px); margin: 5px;" class="btn btn-primary" @onclick="HoldCard2BtnClicked">Hold</button>
-    <button disabled="@toggleDealDraw" style="touch-action: manipulation; float: left; min-height: 50px; width:calc(20% - 10px); margin: 5px;" class="btn btn-primary" @onclick="HoldCard3BtnClicked">Hold</button>
-    <button disabled="@toggleDealDraw" style="touch-action: manipulation; float: left; min-height: 50px; width:calc(20% - 10px); margin: 5px;" class="btn btn-primary" @onclick="HoldCard4BtnClicked">Hold</button>
-    <button disabled="@toggleDealDraw" style="touch-action: manipulation; float: left; min-height: 50px; width:calc(20% - 10px); margin: 5px;" class="btn btn-primary" @onclick="HoldCard5BtnClicked">Hold</button>
+    <button disabled="@notDrawMode" style="touch-action: manipulation; float: left; min-height: 50px; width:calc(20% - 10px); margin: 5px;" class="btn btn-primary" @onclick="HoldCard1BtnClicked">Hold</button>
+    <button disabled="@notDrawMode" style="touch-action: manipulation; float: left; min-height: 50px; width:calc(20% - 10px); margin: 5px;" class="btn btn-primary" @onclick="HoldCard2BtnClicked">Hold</button>
+    <button disabled="@notDrawMode" style="touch-action: manipulation; float: left; min-height: 50px; width:calc(20% - 10px); margin: 5px;" class="btn btn-primary" @onclick="HoldCard3BtnClicked">Hold</button>
+    <button disabled="@notDrawMode" style="touch-action: manipulation; float: left; min-height: 50px; width:calc(20% - 10px); margin: 5px;" class="btn btn-primary" @onclick="HoldCard4BtnClicked">Hold</button>
+    <button disabled="@notDrawMode" style="touch-action: manipulation; float: left; min-height: 50px; width:calc(20% - 10px); margin: 5px;" class="btn btn-primary" @onclick="HoldCard5BtnClicked">Hold</button>
 </div>
 
 <div id="DealDraw button" style="text-align: center; margin: 25px;">
     <!--TODO figure out how to reserve boolean logic in blazor easily for these hidden attributes-->
     <button hidden="@started" class="btn btn-primary"    style="touch-action: manipulation; min-height: 50px; min-width: 100px" @onclick="Start">Start</button>
-    <button hidden="@notStarted" class="btn btn-primary" style="touch-action: manipulation; min-height: 50px; min-width: 100px" @onclick="OnDealDrawBtnClicked">@dealDrawBtn</button>
+    <button hidden="@notDealMode" class="btn btn-primary" style="touch-action: manipulation; min-height: 50px; min-width: 100px" @onclick="Deal">Deal new round</button>
+    <button hidden="@notDrawMode" class="btn btn-primary" style="touch-action: manipulation; min-height: 50px; min-width: 100px" @onclick="Draw">Draw</button>
     <h2>@gameOver</h2>
 </div>
 
@@ -163,17 +166,19 @@
     // Game logic
     private GameModel gameModel = new GameModel();
 
+    private AppHistory saveState = new AppHistory();
+    private const string saveStateName = "saveState";
+
     private bool started = false;
-    private bool notStarted = true;
+    private bool notDealMode = true;
+    private bool notDrawMode = true;
 
     private GameState gameState = GameState.NewGame;
 
     // Game Over text displayed when score reaches 0
     private string gameOver = string.Empty;
 
-    // Current score
     private int score;
-
     private int highScore;
 
     // Represents how much the score changes after each round
@@ -181,9 +186,6 @@
 
     // Text displayed after each round indicated win or loss
     private string winLoss = "😐";
-
-    // Text displayed on Deal/Draw toggle button
-    private string dealDrawBtn = "Deal new round";
 
     // Boolean representing if a dealt card should be held during the draw
     private bool holdCard1 = false;
@@ -200,8 +202,7 @@
     PlayingCardModel card4 = new PlayingCardModel(4);
     PlayingCardModel card5 = new PlayingCardModel(5);
 
-
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         // unsubscibe first to avoid duplicate event handlers
         gameModel.CardsUpdated -= _gameModel_CardsUpdated;
@@ -210,6 +211,7 @@
         gameModel.GameOverTriggered -= _gameModel_GameOverTriggered;
         gameModel.HighScoreUpdated -= _gameModel_HighScoreUpdated;
         gameModel.GameStateChanged -= _gameModel_GameStateChanged;
+        gameModel.SeedUpdated -= _gameModel_SeedUpdated;
 
         // subscribe event handlers
         gameModel.CardsUpdated += _gameModel_CardsUpdated;
@@ -218,8 +220,52 @@
         gameModel.GameOverTriggered += _gameModel_GameOverTriggered;
         gameModel.HighScoreUpdated += _gameModel_HighScoreUpdated;
         gameModel.GameStateChanged += _gameModel_GameStateChanged;
+        gameModel.SeedUpdated += _gameModel_SeedUpdated;
 
-        gameModel.Initialize();
+
+        // Load cached data if it exists, otherwise create new
+        AppHistory? history = await localStorage.GetItemAsync<AppHistory>(saveStateName);
+        if (history == null)
+        {
+            history = new AppHistory();
+
+        }
+        saveState = history;
+
+        // Update initial game state
+        score = saveState.CurrentScore;
+        highScore = saveState.HighScore;
+        card1 = new PlayingCardModel(saveState.Hand[0]);
+        card2 = new PlayingCardModel(saveState.Hand[1]);
+        card3 = new PlayingCardModel(saveState.Hand[2]);
+        card4 = new PlayingCardModel(saveState.Hand[3]);
+        card5 = new PlayingCardModel(saveState.Hand[4]);
+        gameState = saveState.GameState; // TODO handle this better
+        seed = saveState.Seed;
+
+        gameModel.Initialize(saveState);
+
+        // store new saveState in local cache for next time.
+        await SaveHistory();
+    }
+
+    private async Task SaveHistory()
+    {
+        saveState.Hand = new List<int>()
+        {
+            card1.GetId(),
+            card2.GetId(),
+            card3.GetId(),
+            card4.GetId(),
+            card5.GetId()
+        };
+        saveState.Seed = seed;
+        saveState.CurrentScore = score;
+        saveState.HighScore = highScore;
+        saveState.GameState = gameState;
+
+        // Cache saveState to local storage
+        await localStorage.SetItemAsync(saveStateName, saveState);
     }
 
     private void Start()
@@ -227,46 +273,103 @@
         gameModel.Start();
         seed = gameModel.GetSeed();
         started = true;
-        notStarted = false;
     }
 
-    private void _gameModel_HighScoreUpdated(object sender, HighScoreUpdatedEventArgs e)
+    private async void _gameModel_SeedUpdated(object sender, SeedUpdatedEventArgs e)
+    {
+        seed = e.Seed;
+        await SaveHistory();
+    }
+
+    private async void _gameModel_HighScoreUpdated(object sender, HighScoreUpdatedEventArgs e)
     {
         highScore = e.HighScore;
+        await SaveHistory();
     }
 
-    private void _gameModel_GameStateChanged(object sender, GameStateChangedEventArgs e)
+    // This handles updating UI based on Current Game State
+    private async void _gameModel_GameStateChanged(object sender, GameStateChangedEventArgs e)
     {
         gameState = e.GameState;
+
+        switch (gameState)
+        {
+            // New Game
+            case GameState.NewGame:
+                winLoss = "😐";
+                started = false;
+                notDealMode = true;
+                notDrawMode = true;
+                gameOver = string.Empty;
+                scoreChange = string.Empty;
+                holdCard1 = holdCard2 = holdCard3 = holdCard4 = holdCard5 = false;
+                break;
+            // Deal
+            case GameState.Deal:
+                winLoss = "😐"; // TODO update this to smiley or frown when page is refreshed
+                started = true;
+                notDealMode = false;
+                notDrawMode = true;
+                gameOver = string.Empty;
+                scoreChange = string.Empty; // TODO update this when page is refreshed
+                holdCard1 = holdCard2 = holdCard3 = holdCard4 = holdCard5 = false;
+                break;
+            // Draw
+            case GameState.Draw:
+                winLoss = "😐";
+                started = true;
+                notDealMode = true;
+                notDrawMode = false;
+                gameOver = string.Empty;
+                scoreChange = string.Empty;
+                break;
+            // Game Over
+            case GameState.GameOver:
+                winLoss = "😭";
+                started = false;
+                notDealMode = true;
+                notDrawMode = true;
+                gameOver = "Game Over";
+                scoreChange = string.Empty;
+                holdCard1 = holdCard2 = holdCard3 = holdCard4 = holdCard5 = false;
+                break;
+            default:
+                throw new Exception($"Invalid game state {gameState}");
+        }
+
+        await SaveHistory();
     }
 
-    private void _gameModel_ScoreUpdated(object sender, ScoreUpdatedEventArgs e)
+    private async void _gameModel_ScoreUpdated(object sender, ScoreUpdatedEventArgs e)
     {
         this.score = e.Score;
         if (e.ScoreChange > 0)
         {
             scoreChange = $" (+{e.ScoreChange})";
         }
+        await SaveHistory();
     }
 
-    private void _gameModel_GameOverTriggered(object? sender, EventArgs e)
+    private async void _gameModel_GameOverTriggered(object? sender, EventArgs e)
     {
         gameOver = "Game Over";
-        dealDrawBtn = "Start New Game";
+        await SaveHistory();
     }
 
-    private void _gameModel_WinObtained(object sender, ResultsObtainedEventArgs e)
+    private async void _gameModel_WinObtained(object sender, ResultsObtainedEventArgs e)
     {
         winLoss = e.WinLoss ? "😊Win: " + e.WinCondition.ToString() : "😢Loss";
+        await SaveHistory();
     }
 
-    private void _gameModel_CardsUpdated(object sender, CardsUpdatedEventArgs e)
+    private async void _gameModel_CardsUpdated(object sender, CardsUpdatedEventArgs e)
     {
         card1 = e.NewCards.ToList()[0];
         card2 = e.NewCards.ToList()[1];
         card3 = e.NewCards.ToList()[2];
         card4 = e.NewCards.ToList()[3];
         card5 = e.NewCards.ToList()[4];
+        await SaveHistory();
     }
 
     private void HoldCard1BtnClicked()
@@ -294,32 +397,19 @@
         holdCard5 = !holdCard5;
     }
 
-    private bool toggleDealDraw = true;
-    private void OnDealDrawBtnClicked()
+    private void Deal()
     {
-        gameOver = string.Empty;
+        gameModel.Deal();
+    }
 
-        if (toggleDealDraw)
-        {
-            gameModel.Deal();
-            dealDrawBtn = "Draw";
-            winLoss = "😐";
-            scoreChange = "";
-        }
-        else
-        {
-            List<int> cardsToDiscard = new List<int>();
-            if (!holdCard1) cardsToDiscard.Add(0);
-            if (!holdCard2) cardsToDiscard.Add(1);
-            if (!holdCard3) cardsToDiscard.Add(2);
-            if (!holdCard4) cardsToDiscard.Add(3);
-            if (!holdCard5) cardsToDiscard.Add(4);
-            gameModel.Draw(cardsToDiscard);
-            dealDrawBtn = "Deal new round";
-            holdCard1 = holdCard2 = holdCard3 = holdCard4 = holdCard5 = false;
-        }
-        toggleDealDraw = !toggleDealDraw;
-
-        // TODO toggle Hold buttons being clickable
+    private void Draw()
+    {
+        List<int> cardsToDiscard = new List<int>();
+        if (!holdCard1) cardsToDiscard.Add(0);
+        if (!holdCard2) cardsToDiscard.Add(1);
+        if (!holdCard3) cardsToDiscard.Add(2);
+        if (!holdCard4) cardsToDiscard.Add(3);
+        if (!holdCard5) cardsToDiscard.Add(4);
+        gameModel.Draw(cardsToDiscard);
     }
 }

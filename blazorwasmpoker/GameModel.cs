@@ -36,6 +36,7 @@
         public event CardsUpdatedEventHandler? CardsUpdated;
         public event ScoreUpdatedEventHandler? ScoreUpdated;
         public event HighScoreUpdatedEventHandler? HighScoreUpdated;
+        public event SeedUpdatedEventHandler? SeedUpdated;
         public event ResultsObtainedEventHandler? ResultsObtained;
         public event GameStateChangedEventHandler? GameStateChanged;
         public event EventHandler? GameOverTriggered;
@@ -49,69 +50,81 @@
             }
         }
 
-        public void Initialize()
+        /// <summary>
+        /// Moves card with input id to the front of the deck
+        /// </summary>
+        private void MoveCardToFront(int id)
         {
-            // Attempt to retrieve history, otherwise starts a new game instance
-            saveState = HistorySerializer.Deserialize();
+            int cardIndex = this._deck.FindIndex(card => card.GetId() == id);
+            PlayingCardModel card = this._deck[cardIndex];
+            _deck.RemoveAt(cardIndex);
+            _deck.Insert(0, card);
+        }
 
+        public void Initialize(AppHistory saveState)
+        {
             _score = saveState.CurrentScore;
             _highScore = saveState.HighScore;
             seed = saveState.Seed > 0 ? saveState.Seed : rng.Next(); // load seed if it exists, otherwise create new seed
+            this.Shuffle(this._deck);
             _hand.Clear();
             _hand.Add(new PlayingCardModel(saveState.Hand[0]));
             _hand.Add(new PlayingCardModel(saveState.Hand[1]));
             _hand.Add(new PlayingCardModel(saveState.Hand[2]));
             _hand.Add(new PlayingCardModel(saveState.Hand[3]));
             _hand.Add(new PlayingCardModel(saveState.Hand[4]));
-            //UpdateGameState(saveState.GameState);
+
+            // Move cards in hand to first 5 indices of the deck (so that we don't double-draw them)
+            MoveCardToFront(_hand[4].GetId());
+            MoveCardToFront(_hand[3].GetId());
+            MoveCardToFront(_hand[2].GetId());
+            MoveCardToFront(_hand[1].GetId());
+            MoveCardToFront(_hand[0].GetId());
+
+            _gameState = saveState.GameState;
+            GameStateChanged?.Invoke(this, new GameStateChangedEventArgs()
+            {
+                GameState = saveState.GameState,
+                FirstLoad = true
+            });
         }
 
-        private void Save()
+        private void UpdateGameState(GameState nextGameState)
         {
-            saveState.Hand = _hand.Select(card => card.GetId()).ToList();
-            saveState.Seed = seed;
-            saveState.CurrentScore = _score;
-            saveState.HighScore = _highScore;
-            saveState.GameState = _gameState;
+            _gameState = nextGameState;
+            switch (nextGameState)
+            {
+                // New Game
+                case GameState.NewGame:
+                    // Reset hand and deck
+                    // Reset seed
+                    break;
+                // Deal
+                case GameState.Deal:
+                    // Notify Hand cards update
+                    // Fix deck to exclude hand
+                    // set current seed
+                    break;
+                // Draw
+                case GameState.Draw:
+                    // Notify Hand cards update
+                    // Fix deck to exclude hand
+                    // set current seed
+                    // Notify Score/Results updates
+                    break;
+                // Game Over
+                case GameState.GameOver:
+                    // Notify Hand cards update
+                    // Fix deck to exclude hand
+                    // set current seed
+                    // Notify game over
+                    break;
+                default:
+                    throw new Exception($"Invalid game state {nextGameState}");
+            }
 
-            HistorySerializer.Serialize(saveState);
+            GameStateChanged?.Invoke(this, new GameStateChangedEventArgs() { GameState = nextGameState });
         }
-
-        //private void UpdateGameState(GameState currentGameState)
-        //{
-        //    switch (currentGameState)
-        //    {
-        //        // New Game
-        //        case GameState.NewGame:
-        //            // Reset hand and deck
-        //            // Reset seed
-        //            break;
-        //        // Deal
-        //        case GameState.Deal:
-        //            // Notify Hand cards update
-        //            // Fix deck to exclude hand
-        //            // set current seed
-        //            break;
-        //        // Draw
-        //        case GameState.Draw:
-        //            // Notify Hand cards update
-        //            // Fix deck to exclude hand
-        //            // set current seed
-        //            // Notify Score/Results updates
-        //            break;
-        //        // Game Over
-        //        case GameState.GameOver:
-        //            // Notify Hand cards update
-        //            // Fix deck to exclude hand
-        //            // set current seed
-        //            // Notify game over
-        //            break;
-        //        default:
-        //            throw new Exception($"Invalid game state {currentGameState}");
-        //    }
-
-        //    GameStateChanged?.Invoke(this, new GameStateChangedEventArgs() { GameState = currentGameState });
-        //}
 
         private bool isRoyalFlush()
         {
@@ -257,6 +270,7 @@
 
         public void Deal()
         {
+
             // Upon dealing new hand, automatically bet 5 points for the user
             this._score -= 5;
             ScoreUpdated?.Invoke(this, new ScoreUpdatedEventArgs()
@@ -277,7 +291,7 @@
                 NewCards = _hand
             });
 
-            Save();
+            UpdateGameState(GameState.Draw);
         }
 
         public void Draw(IEnumerable<int> indicesOfCardsToDiscard)
@@ -295,8 +309,6 @@
             });
 
             EndOfTurn();
-            Save();
-
         }
 
         public void EndOfTurn()
@@ -304,6 +316,8 @@
             WinCondition winCondition = calculateScore();
             int scoreChange = (int)winCondition;
             this._score += scoreChange;
+
+            UpdateGameState(GameState.Deal);
 
             if (_score > _highScore)
             {
@@ -328,7 +342,7 @@
         public void Reset()
         {
             GameOverTriggered?.Invoke(this, new EventArgs());
-            Start();
+            UpdateGameState(GameState.GameOver);
         }
 
         public void Start()
@@ -342,11 +356,19 @@
             _hand[4] = _deck[4];
             CardsUpdated?.Invoke(this, new CardsUpdatedEventArgs() { NewCards = _hand });
 
+            // Set new seed
+            seed = rng.Next();
+            SeedUpdated?.Invoke(this, new SeedUpdatedEventArgs() { Seed = seed });
+
             // Reset score back to 100
             this._score = 100;
             ScoreUpdated?.Invoke(this, new ScoreUpdatedEventArgs() { Score = _score, ScoreChange = 0 });
-            Save();
-
+            if (_score > _highScore)
+            {
+                this._highScore = 100;
+            }
+            HighScoreUpdated?.Invoke(this, new HighScoreUpdatedEventArgs() { HighScore = _highScore });
+            UpdateGameState(GameState.Deal);
         }
 
         public int GetSeed()
