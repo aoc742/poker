@@ -8,11 +8,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FC1530F0-0AB1-410B-B732-3232B2B0152B}"
 	ProjectSection(SolutionItems) = preProject
 		.nojekyll = .nojekyll
-		blazorwasmpoker\wwwroot\404.html = blazorwasmpoker\wwwroot\404.html
 		index.html = index.html
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pokertest", "pokertest\pokertest.csproj", "{FC83C1BA-3B41-46C1-ADEE-390C0D8A0ADB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pokertest", "pokertest\pokertest.csproj", "{FC83C1BA-3B41-46C1-ADEE-390C0D8A0ADB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1C5219BD-3792-49D0-A96B-6FB5B9B410EA} = {1C5219BD-3792-49D0-A96B-6FB5B9B410EA}
 	EndProjectSection
