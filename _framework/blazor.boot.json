@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "blazorwasmpoker",
   "resources": {
-    "hash": "sha256-GR4+SJpD2CShNvGCBdNFn35xrMc0966RT7HC7bD9sts=",
+    "hash": "sha256-FEHl2AynrVi+MbXVAFb+jCED2NJjBBA7Ep0+AjcrCiE=",
     "jsModuleNative": {
       "dotnet.native.8.0.6.suuomc2hr0.js": "sha256-YU6M9+jtDVnB8/wtrgIndOstzNh778Ls8g9XnbjorSk="
     },
@@ -18,7 +18,7 @@
     },
     "assembly": {
       "Blazored.LocalStorage.wasm": "sha256-OaMAAd5n7ORfyur5e3QIyEVKJ76MKIvwbg7/icnnYcU=",
-      "blazorwasmpoker.wasm": "sha256-cMMc7ME0AcFJSFp0qZEKGT4Bbxus+rljCnmMsaBJLhg=",
+      "blazorwasmpoker.wasm": "sha256-6N/3c76RZrXmXRaXgvCGQQAExeCTl6e6Pq0J5BKfY68=",
       "Microsoft.AspNetCore.Components.wasm": "sha256-pVMNnWXh3B+1GoOP/ZpBjtxTlZk4LQJDn2Uzbxl6a0s=",
       "Microsoft.AspNetCore.Components.Web.wasm": "sha256-4tmx4uC98MyKjCuM9ErBZwXpqkLx4fwVZfJQIv+Y0+A=",
       "Microsoft.AspNetCore.Components.WebAssembly.wasm": "sha256-LYJGTqka6p2RaQhwjm0nbX5muzjO6rM8oTE9uoUmGBs=",
