@@ -287,15 +287,15 @@
             this._handsPlayed += 1;
             HandsPlayedUpdated?.Invoke(this, new HandsPlayedUpdatedEventArgs()
             {
-                HandsPlayed = this._handsPlayed;
+                HandsPlayed = this._handsPlayed
             });
             if (_handsPlayed > _handsPlayedHighScore)
             {
                 _handsPlayedHighScore = _handsPlayed;
                 HandsPlayedHighScoreUpdated?.Invoke(this, new HandsPlayedHighScoreUpdatedEventArgs()
                 {
-                    HandsPlayedHighScore = _handsPlayedHighScore;
-                })
+                    HandsPlayedHighScore = _handsPlayedHighScore
+                });
             }
 
             this.Shuffle(this._deck);
