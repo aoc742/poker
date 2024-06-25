@@ -12,6 +12,12 @@
 <div style="height:25px; width:100%;">
     <h2 style="float: left; width:100%;">Score: @score <label style="color: green">@scoreChange</label></h2>
 </div>
+<div style="height:25px; width:100%;">
+    <h2 style="float: left; width:100%;">Record Hands Played: @handsPlayedHighScore </h2>
+</div>
+<div style="height:25px; width:100%;">
+    <h2 style="float: left; width:100%;">Hands Played: @handsPlayed </h2>
+</div>
 <div style="height: 25px; width: 100%;">
     <h2 style="float: left;">@winLoss</h2>
 </div>
@@ -180,6 +186,8 @@
 
     private int score;
     private int highScore;
+    private int handsPlayed;
+    private int handsPlayedHighScore;
 
     // Represents how much the score changes after each round
     private string scoreChange = string.Empty;
@@ -212,6 +220,8 @@
         gameModel.HighScoreUpdated -= _gameModel_HighScoreUpdated;
         gameModel.GameStateChanged -= _gameModel_GameStateChanged;
         gameModel.SeedUpdated -= _gameModel_SeedUpdated;
+        gameModel.HandsPlayedUpdated -= _gameModel_HandsPlayedUpdated;
+        gameModel.HandsPlayedHighScoreUpdated -=  _gameModel_HandsPlayedHighScoreUpdated;
 
         // subscribe event handlers
         gameModel.CardsUpdated += _gameModel_CardsUpdated;
@@ -221,6 +231,8 @@
         gameModel.HighScoreUpdated += _gameModel_HighScoreUpdated;
         gameModel.GameStateChanged += _gameModel_GameStateChanged;
         gameModel.SeedUpdated += _gameModel_SeedUpdated;
+        gameModel.HandsPlayedUpdated += _gameModel_HandsPlayedUpdated;
+        gameModel.HandsPlayedHighScoreUpdated +=  _gameModel_HandsPlayedHighScoreUpdated;
 
 
         // Load cached data if it exists, otherwise create new
@@ -263,6 +275,8 @@
         saveState.CurrentScore = score;
         saveState.HighScore = highScore;
         saveState.GameState = gameState;
+        saveState.HandsPlayed = handsPlayed;
+        saveState.HandsPlayedHighScore = handsPlayedHighScore;
 
         // Cache saveState to local storage
         await localStorage.SetItemAsync(saveStateName, saveState);
@@ -347,6 +361,18 @@
         {
             scoreChange = $" (+{e.ScoreChange})";
         }
+        await SaveHistory();
+    }
+
+    private async void _gameModel_HandsPlayedUpdated(object sender, HandsPlayedUpdatedEventArgs e)
+    {
+        this.handsPlayed = e.HandsPlayed;
+        await SaveHistory();
+    }
+
+    private async void _gameModel_HandsPlayedHighScoreUpdated(object sender, HandsPlayedHighScoreUpdatedEventArgs e)
+    {
+        this.handsPlayedHighScore = e.HandsPlayedHighScore;
         await SaveHistory();
     }
 

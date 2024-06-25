@@ -35,6 +35,16 @@ namespace blazorwasmpoker
         /// Initial game seed
         /// </summary>
         public int Seed { get; set; } = 0;
+
+        /// <summary>
+        /// Number of hands played this game
+        /// </summary>
+        public int HandsPlayed { get; set; } = 0;
+
+        /// <summary>
+        /// High score for most hands played in a game
+        /// </summary>
+        public int HandsPlayedHighScore { get; set; } = 0;
     }
 
     public class HistorySerializer

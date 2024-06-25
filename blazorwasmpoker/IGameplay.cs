@@ -38,12 +38,24 @@
         public GameState GameState { get; set; }
     }
 
+    public class HandsPlayedUpdatedEventArgs : EventArgs
+    {
+        public int HandsPlayed {get; set;}
+    }
+
+        public class HandsPlayedHighScoreUpdatedEventArgs : EventArgs
+    {
+        public int HandsPlayedHighScore {get; set;}
+    }
+
     public delegate void CardsUpdatedEventHandler(Object sender, CardsUpdatedEventArgs e);
     public delegate void ScoreUpdatedEventHandler(Object sender, ScoreUpdatedEventArgs e);
     public delegate void ResultsObtainedEventHandler(Object sender, ResultsObtainedEventArgs e);
     public delegate void GameStateChangedEventHandler(Object sender, GameStateChangedEventArgs e);
     public delegate void HighScoreUpdatedEventHandler(Object sender, HighScoreUpdatedEventArgs e);
     public delegate void SeedUpdatedEventHandler(Object sender, SeedUpdatedEventArgs e);
+    public delegate void HandsPlayedUpdatedEventHandler(object sender, HandsPlayedUpdatedEventArgs e);
+    public delegate void HandsPlayedHighScoreUpdatedEventHandler(object sender, HandsPlayedHighScoreUpdatedEventArgs e);
 
     public interface IGameplay
     {
@@ -53,6 +65,8 @@
         public event GameStateChangedEventHandler GameStateChanged;
         public event HighScoreUpdatedEventHandler HighScoreUpdated;
         public event SeedUpdatedEventHandler SeedUpdated;
+        public event HandsPlayedUpdatedEventHandler HandsPlayedUpdated;
+        public event HandsPlayedHighScoreUpdatedEventHandler HandsPlayedHighScoreUpdated;
         public event EventHandler GameOverTriggered;
 
         void Start();

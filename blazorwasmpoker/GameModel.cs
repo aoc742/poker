@@ -28,6 +28,8 @@
         public List<PlayingCardModel> _hand = new List<PlayingCardModel>(new PlayingCardModel[5]); // 5 card hand
         private int _score = 0;
         private int _highScore = 0;
+        private int _handsPlayed = 0;
+        private int _handsPlayedHighScore = 0;
         private GameState _gameState = GameState.NewGame;
         private int seed = 0;
         private Random rng = new Random();
@@ -39,6 +41,8 @@
         public event SeedUpdatedEventHandler? SeedUpdated;
         public event ResultsObtainedEventHandler? ResultsObtained;
         public event GameStateChangedEventHandler? GameStateChanged;
+        public event HandsPlayedUpdatedEventHandler? HandsPlayedUpdated;
+        public event HandsPlayedHighScoreUpdatedEventHandler? HandsPlayedHighScoreUpdated;
         public event EventHandler? GameOverTriggered;
 
         public GameModel()
@@ -65,6 +69,8 @@
         {
             _score = saveState.CurrentScore;
             _highScore = saveState.HighScore;
+            _handsPlayed = saveState.HandsPlayed;
+            _handsPlayedHighScore = saveState.HandsPlayedHighScore;
             seed = saveState.Seed > 0 ? saveState.Seed : rng.Next(); // load seed if it exists, otherwise create new seed
             this.Shuffle(this._deck);
             _hand.Clear();
@@ -278,6 +284,19 @@
                 Score = this._score,
                 ScoreChange = 0
             });
+            this._handsPlayed += 1;
+            HandsPlayedUpdated?.Invoke(this, new HandsPlayedUpdatedEventArgs()
+            {
+                HandsPlayed = this._handsPlayed;
+            });
+            if (_handsPlayed > _handsPlayedHighScore)
+            {
+                _handsPlayedHighScore = _handsPlayed;
+                HandsPlayedHighScoreUpdated?.Invoke(this, new HandsPlayedHighScoreUpdatedEventArgs()
+                {
+                    HandsPlayedHighScore = _handsPlayedHighScore;
+                })
+            }
 
             this.Shuffle(this._deck);
             _hand[0] = _deck[0];
@@ -368,6 +387,11 @@
                 this._highScore = 100;
             }
             HighScoreUpdated?.Invoke(this, new HighScoreUpdatedEventArgs() { HighScore = _highScore });
+
+            // Reset hands played
+            this._handsPlayed = 0;
+            HandsPlayedUpdated?.Invoke(this, new HandsPlayedUpdatedEventArgs() { HandsPlayed = _handsPlayed});
+
             UpdateGameState(GameState.Deal);
         }
 
