@@ -4,18 +4,23 @@
 
 <PageTitle>Poker</PageTitle>
 
-<h1>Poker</h1>
+<div class="row">
+    <div class="column left">
+        <h2>Current</h2>
+        <label>Hands: @handsPlayed</label>
+    </div>
+    <div class="column right">
+        <h2>Records</h2>
+        <label>Hands: @handsPlayedHighScore</label>
+        <label style="align-content: right;">High Score: @highScore</label>
+    </div>
+</div>
+<div class="row" style="padding-top: 25px;">
+    <h2 style="float: left;">Score: @score <label style="color: green">@scoreChange</label></h2>
+</div>
 
-<div style="height:25px; width:100%;">
-    <label style="float: left; width:55%; font-size:large;">Score: @score <label style="color: green">@scoreChange</label></label>
-    <label style="float: right; width:45%">High Score: @highScore</label>
-</div>
-<div style="height:25px; width:100%;">
-    <label style="float: left; width:55%;">Hands: @handsPlayed</label>
-    <label style="float: right; width:45%;">Record Hands: @handsPlayedHighScore</label>
-</div>
 <div style="height: 25px; width: 100%;">
-    <h2 style="float: left; width:">@winLoss</h2>
+    <h1 style="float: left; width:100%">@winLoss</h1>
 </div>
 
 
