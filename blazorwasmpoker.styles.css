@@ -160,3 +160,22 @@ main[b-6ocyqeaoei] {
         overflow-y: auto;
     }
 }
+/* /Pages/Poker.razor.rz.scp.css */
+.column[b-m2p59qme1c] {
+    float: left;
+}
+
+.left[b-m2p59qme1c] {
+    width: 50%;
+}
+
+.right[b-m2p59qme1c] {
+    width: 50%;
+}
+
+/* Clear floats after the columns */
+.row[b-m2p59qme1c]:after {
+    content: "";
+    display: table;
+    clear: both;
+}
