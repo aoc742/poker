@@ -1,10 +1,14 @@
-Steps to get this Blazor app working as a PWA in Github Pages.
+# About
+This is a very simple Five Card Stud Poker game. 
 
-guide followed: [https://github.com/Swimburger/BlazorGitHubPagesDemo/tree/gh-pages](https://swimburger.net/blog/dotnet/how-to-deploy-aspnet-blazor-webassembly-to-github-pages)
+# Play the game
+[https://aoc742.github.io/poker/](https://aoc742.github.io/poker/)
 
-## Applying updates
-1. In Visual Studio 2022, click on your blazorwasmpoker Project file (not the Solution file)
-2. Then in the top menu, click Build -> Publish blazorwasmpoker
-3. After publishing, copy all the published files (only need the wwwroot folder) to the top level directory of this repo, then commit!
-4. Come into Github at this repo. Click Settings -> Pages -> Save
-5. Wait for the new changes to be applied to your webpage: github.com/aoc742/blazorwasmpoker/
+## Background
+This game is designed to bring you back to the year 2000 when you are riding in the card with nothing but your handheld Poker device. No cell phone. No internet.
+I made this game because I miss the simple, minimalistic UI, offline, single player poker game that I could pick up and play for 5 seconds or 5 minutes. I hope to keep those roots in this game.
+
+This game is written in C# using a Blazor app working as a Progressive Web App (PWA). It is statically hosted using Github Pages.
+
+## Phone Screenshot 
+![Phone Screenshot](./example.jpeg)
